@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyTime | Mi horario de estudio</title>
+<style>
+:root{--bg:#071426;--panel:#101f38;--panel2:#142746;--text:#eef4ff;--muted:#a9bbdc;--purple:#7165ff;--line:#294064;--cyan:#38d9d0}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#071426,#0d1830 55%,#101b3b);color:var(--text);min-height:100vh}
+header{padding:22px clamp(16px,4vw,48px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--purple),#9c6bff);display:grid;place-items:center;font-size:25px}
+h1{font-size:clamp(22px,3vw,30px);margin:0}.subtitle{color:var(--muted);margin:5px 0 0;font-size:14px}
+.pill{border:1px solid var(--line);background:#13233e;border-radius:999px;padding:9px 13px;color:var(--muted);font-size:13px}
+main{max-width:1250px;margin:0 auto;padding:28px 18px 48px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.8fr);gap:20px}
+.panel{background:rgba(16,31,56,.92);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 12px 35px #0002}
+.panel h2{font-size:20px;margin:0 0 7px}.desc{color:var(--muted);font-size:14px;margin:0 0 20px;line-height:1.5}
+form{display:grid;grid-template-columns:1fr 1fr;gap:13px}label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
+input,select{width:100%;background:#09172b;border:1px solid #344b70;color:var(--text);padding:12px;border-radius:10px;font:inherit;outline:none}
+input:focus,select:focus{border-color:var(--purple)}.full{grid-column:1/-1}
+button{border:0;cursor:pointer;border-radius:11px;padding:12px 15px;font:600 14px inherit;transition:transform .15s,opacity .15s}
+button:hover{transform:translateY(-1px)}.primary{background:linear-gradient(135deg,var(--purple),#8b5cf6);color:white}.secondary{background:#1c3153;color:var(--text);border:1px solid var(--line)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.hint{font-size:12px;color:var(--muted);line-height:1.5;margin-top:13px}
+.list-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:24px 0 12px}.list-head h3{margin:0;font-size:17px}
+.schedule-list{display:grid;gap:10px}.item{display:grid;grid-template-columns:9px minmax(0,1fr) auto;gap:12px;align-items:center;padding:13px;background:#0b1a30;border:1px solid #203657;border-radius:13px}
+.color{height:42px;width:7px;border-radius:99px;background:var(--purple)}.item h4{margin:0 0 5px;font-size:15px}.item p{margin:0;color:var(--muted);font-size:12px}
+.remove{background:transparent;color:#ff9ba9;padding:8px;font-size:18px}.empty{text-align:center;padding:25px 10px;color:var(--muted);border:1px dashed var(--line);border-radius:13px;font-size:14px}
+.side{display:grid;gap:20px;align-content:start}.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{background:#0b1a30;border:1px solid #203657;padding:16px;border-radius:14px}.stat strong{font-size:25px;display:block}.stat span{font-size:12px;color:var(--muted)}
+.subjects{display:flex;flex-wrap:wrap;gap:8px}.subject{padding:8px 11px;border-radius:999px;background:#1c3153;border:1px solid #30466b;font-size:12px}
+.progress{height:8px;border-radius:99px;background:#243858;overflow:hidden;margin-top:12px}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .2s}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:0 18px 24px}
+@media(max-width:850px){main{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}}@media(max-width:560px){.side{grid-template-columns:1fr}form{grid-template-columns:1fr}.full{grid-column:auto}.panel{padding:17px}.item{grid-template-columns:7px minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">📚</div><div><h1>StudyTime</h1><p class="subtitle">Organiza tu tiempo, alcanza tus metas 🚀</p></div></div>
+  <div class="pill">✨ Tu espacio de estudio</div>
+</header>
+<main>
+  <section class="panel">
+    <h2>Crear mi horario</h2>
+    <p class="desc">Agrega tus materias y actividades. Puedes organizar tu semana a tu manera.</p>
+    <form id="scheduleForm">
+      <div><label for="activity">Materia o actividad</label><input id="activity" maxlength="60" placeholder="Ej. Matemáticas" required></div>
+      <div><label for="day">Día</label><select id="day"><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option><option>Sábado</option><option>Domingo</option></select></div>
+      <div><label for="start">Hora de inicio</label><input id="start" type="time" value="16:00" required></div>
+      <div><label for="end">Hora de finalización</label><input id="end" type="time" value="17:00" required></div>
+      <div class="full"><label for="notes">Notas (opcional)</label><input id="notes" maxlength="120" placeholder="Ej. Repasar fracciones y terminar ejercicios"></div>
+      <div class="full actions"><button class="primary" type="submit">＋ Añadir al horario</button><button class="secondary" type="button" id="clearBtn">Limpiar horario</button></div>
+    </form>
+    <p class="hint">💡 Consejo: programa descansos cortos entre sesiones y deja tiempo para comer, jugar y dormir.</p>
+    <div class="list-head"><h3>Mis actividades</h3><span class="pill" id="count">0 actividades</span></div>
+    <div id="scheduleList" class="schedule-list"><div class="empty">Todavía no hay actividades. ¡Añade la primera! ✨</div></div>
+  </section>
+  <aside class="side">
+    <section class="panel">
+      <h2>📊 Mi resumen</h2><p class="desc">Así va tu planificación.</p>
+      <div class="stat-grid"><div class="stat"><strong id="total">0</strong><span>Actividades</span></div><div class="stat"><strong id="hours">0 h</strong><span>Tiempo planeado</span></div></div>
+      <div style="display:flex;justify-content:space-between;gap:8px;margin-top:20px;font-size:13px"><span>Actividades completadas</span><strong id="doneLabel">0%</strong></div>
+      <div class="progress"><div id="progressBar"></div></div>
+    </section>
+    <section class="panel">
+      <h2>🎯 Mis objetivos</h2><p class="desc">Marca los objetivos que cumplas.</p>
+      <div id="goals" style="display:grid;gap:13px">
+        <label style="display:flex;gap:10px;align-items:center;color:var(--text);margin:0"><input type="checkbox" class="goal" style="width:auto"> Estudiar las materias del día</label>
+        <label style="display:flex;gap:10px;align-items:center;color:var(--text);margin:0"><input type="checkbox" class="goal" style="width:auto"> Terminar las tareas</label>
+        <label style="display:flex;gap:10px;align-items:center;color:var(--text);margin:0"><input type="checkbox" class="goal" style="width:auto"> Tomar descansos</label>
+        <label style="display:flex;gap:10px;align-items:center;color:var(--text);margin:0"><input type="checkbox" class="goal" style="width:auto"> Preparar la mochila</label>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>🎨 Ideas de materias</h2><p class="desc">Puedes añadir cualquiera de estas a tu horario.</p>
+      <div class="subjects"><span class="subject">Matemáticas</span><span class="subject">Lengua</span><span class="subject">Ciencias</span><span class="subject">Inglés</span><span class="subject">Historia</span><span class="subject">Lectura</span><span class="subject">Tareas</span><span class="subject">Descanso</span></div>
+    </section>
+  </aside>
+</main>
+<footer>StudyTime · Hecho para estudiar mejor, sin olvidar descansar 💜</footer>
+<script>
+const form=document.getElementById('scheduleForm');
+const list=document.getElementById('scheduleList');
+const colors=['#38bdf8','#f472b6','#34d399','#fb923c','#a78bfa','#facc15','#2dd4bf'];
+let activities=[];
+try{activities=JSON.parse(localStorage.getItem('studytime-activities')||'[]')}catch(e){activities=[]}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){try{localStorage.setItem('studytime-activities',JSON.stringify(activities))}catch(e){}}
+function duration(a){const [sh,sm]=a.start.split(':').map(Number),[eh,em]=a.end.split(':').map(Number);return (eh*60+em-sh*60-sm)/60}
+function render(){
+ activities.sort((a,b)=>['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'].indexOf(a.day)-['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'].indexOf(b.day)||a.start.localeCompare(b.start));
+ document.getElementById('count').textContent=activities.length+' '+(activities.length===1?'actividad':'actividades');
+ document.getElementById('total').textContent=activities.length;
+ const hrs=activities.reduce((s,a)=>s+duration(a),0);
+ document.getElementById('hours').textContent=(Math.round(hrs*10)/10)+' h';
+ const done=activities.filter(a=>a.done).length, pct=activities.length?Math.round(done/activities.length*100):0;
+ document.getElementById('doneLabel').textContent=pct+'%';document.getElementById('progressBar').style.width=pct+'%';
+ if(!activities.length){list.innerHTML='<div class="empty">Todavía no hay actividades. ¡Añade la primera! ✨</div>';return}
+ list.innerHTML=activities.map(a=>`<article class="item"><div class="color" style="background:${colors[a.color%colors.length]}"></div><div><h4>${esc(a.activity)} ${a.done?'✅':''}</h4><p>📅 ${esc(a.day)} · ⏰ ${a.start}–${a.end}${a.notes?' · '+esc(a.notes):''}</p><label style="display:flex;align-items:center;gap:7px;margin:9px 0 0;color:var(--muted)"><input type="checkbox" data-done="${a.id}" ${a.done?'checked':''} style="width:auto"> Marcar como completada</label></div><button class="remove" data-delete="${a.id}" aria-label="Eliminar actividad" title="Eliminar">✕</button></article>`).join('');
+}
+form.addEventListener('submit',e=>{
+ e.preventDefault();const activity=document.getElementById('activity').value.trim(),day=document.getElementById('day').value,start=document.getElementById('start').value,end=document.getElementById('end').value,notes=document.getElementById('notes').value.trim();
+ if(!activity)return;if(end<=start){alert('La hora de finalización debe ser posterior a la hora de inicio.');return}
+ activities.push({id:Date.now().toString()+Math.random().toString(16).slice(2),activity,day,start,end,notes,done:false,color:activities.length%colors.length});
+ save();render();form.reset();document.getElementById('start').value='16:00';document.getElementById('end').value='17:00';document.getElementById('activity').focus();
+});
+list.addEventListener('click',e=>{const del=e.target.closest('[data-delete]');if(del){activities=activities.filter(a=>a.id!==del.dataset.delete);save();render()}});
+list.addEventListener('change',e=>{if(e.target.dataset.done){const a=activities.find(a=>a.id===e.target.dataset.done);if(a){a.done=e.target.checked;save();render()}}});
+document.getElementById('clearBtn').addEventListener('click',()=>{if(activities.length&&confirm('¿Seguro que quieres borrar todas las actividades?')){activities=[];save();render()}});
+render();
+</script>
+</body>
+</html>
